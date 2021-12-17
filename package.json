@@ -27,6 +27,8 @@
     "jasmine": "^3.6.4",
     "jasmine-spec-reporter": "^6.0.0",
     "jasmine-ts": "^0.3.0",
+    "prettier": "^2.5.1",
+    "prettier-plugin-sql": "^0.4.1",
     "ts-node": "^9.1.1",
     "tsc-watch": "^4.2.9"
   }
