@@ -85,7 +85,7 @@ export default abstract class CRUDRepository<T> implements ICRUDRepository<T> {
       this.close();
       return result.rows[0];
     } catch (e) {
-      throw new Error(`unable to update ${this.table} - ${e}`);
+      throw new Error(`unable to get record ${this.table} - ${e}`);
     }
   }
 
@@ -103,6 +103,20 @@ export default abstract class CRUDRepository<T> implements ICRUDRepository<T> {
       return result.rows[0];
     } catch (e) {
       throw new Error(`unable to update ${this.table} - ${e}`);
+    }
+  }
+
+  async exists(id: number): Promise<boolean> {
+    try {
+      await this.open();
+      const result = await this.conn.query(
+        `SELECT COUNT(*) FROM ${this.table} WHERE ${this.primaryKey}=$1`,
+        [id]
+      );
+      this.close();
+      return !!result.rowCount;
+    } catch (e) {
+      throw new Error(`unable to find record in ${this.table} - ${e}`);
     }
   }
 }
