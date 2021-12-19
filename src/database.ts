@@ -13,8 +13,6 @@ const {
   POSTGRES_PASSWORD,
 } = process.env;
 
-console.log("process.env.ENV", process.env.ENV);
-
 const db = new Pool({
   user: ENV === "test" ? POSTGRES_USER_TEST : POSTGRES_USER,
   password: POSTGRES_PASSWORD,
