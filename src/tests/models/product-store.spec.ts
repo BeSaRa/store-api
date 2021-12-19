@@ -71,6 +71,40 @@ describe("Product Model", () => {
     );
   });
 
+  describe("Check get Products by Category ", () => {
+    let productList: number[] = [];
+    const generateProduct = (index: number) => ({
+      name: "Tool" + index,
+      price: 150 * index,
+      category: "tools",
+    });
+
+    const saveProduct = async (index: number) => {
+      return await store.create(generateProduct(index)).then((p) => {
+        productList.push(p.id);
+        return p;
+      });
+    };
+
+    const deleteProduct = async (id: number) => await store.delete(id);
+    beforeAll(async () => {
+      await saveProduct(1)
+        .then(async (product) => await saveProduct(product.id))
+        .then(async (product) => await saveProduct(product.id));
+    });
+
+    afterAll(async () => {
+      await deleteProduct(productList[0])
+        .then(async () => await deleteProduct(productList[1]))
+        .then(async () => await deleteProduct(productList[2]));
+    });
+
+    it("should return 3 product for tools category", async () => {
+      const result = await store.getByCategory("tools");
+      expect(result.length).toEqual(3);
+    });
+  });
+
   it("Product 1 should be exists", async () => {
     const result = await store.exists(product.id);
     expect(result).toBeTrue();

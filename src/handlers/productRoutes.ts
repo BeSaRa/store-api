@@ -31,10 +31,15 @@ const destroy = async (req: Request, res: Response) => {
   res.send(await store.delete(parseInt(req.params.id)));
 };
 
+const productsByCategory = async (req: Request, res: Response) => {
+  res.send(await store.getByCategory(req.params.cat));
+};
+
 export default function productRoutes(app: Application) {
   app.get("/products", index);
   app.post("/products", create);
   app.get("/products/:id", show);
   app.put("/products/:id", update);
   app.delete("/products/:id", destroy);
+  app.delete("/products/category/:cat", productsByCategory);
 }
