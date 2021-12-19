@@ -4,6 +4,7 @@ import objectContaining = jasmine.objectContaining;
 
 const store = new UserStore();
 describe("User Model", () => {
+  let createdId: number;
   it("should have an index method", () => {
     expect(store.index).toBeDefined();
   });
@@ -21,14 +22,14 @@ describe("User Model", () => {
   });
   it("should create user", async () => {
     const user: Partial<User> = {
-      id: 1,
       first_name: "ahmed",
       last_name: "mostafa",
       password: "password",
     };
     const result = await store.create(user);
+    createdId = result.id;
     expect(result).toEqual({
-      id: 1,
+      id: createdId,
       first_name: "ahmed",
       last_name: "mostafa",
       password: "password",
@@ -39,7 +40,7 @@ describe("User Model", () => {
     const result = await store.index();
     expect(result).toEqual([
       {
-        id: 1,
+        id: createdId,
         first_name: "ahmed",
         last_name: "mostafa",
         password: "password",
@@ -47,10 +48,10 @@ describe("User Model", () => {
     ]);
   });
 
-  it("show method should get user with id 1", async () => {
-    const result = await store.show(1);
+  it("show method should get user with created id", async () => {
+    const result = await store.show(createdId);
     expect(result).toEqual({
-      id: 1,
+      id: createdId,
       first_name: "ahmed",
       last_name: "mostafa",
       password: "password",
@@ -59,20 +60,20 @@ describe("User Model", () => {
 
   it("update method should update user", async () => {
     const result = await store.update({
-      id: 1,
+      id: createdId,
       first_name: "John Doe",
     });
 
     expect(result).toEqual(
       objectContaining({
         first_name: "John Doe",
-        id: 1,
+        id: createdId,
       })
     );
   });
 
   it("user 1 should be exists", async () => {
-    const result = await store.exists(1);
+    const result = await store.exists(createdId);
     expect(result).toBeTrue();
   });
 });
