@@ -6,9 +6,9 @@ export default abstract class CRUDRepository<T, PrimaryKeyType>
   implements ICRUDRepository<T, PrimaryKeyType>
 {
   protected conn!: PoolClient;
-  abstract table: string;
-  abstract insertable_fields: string[];
-  abstract primaryKey: string;
+  protected abstract table: string;
+  protected abstract insertable_fields: string[];
+  protected abstract primaryKey: string;
 
   /**
    * @description open connection with database
