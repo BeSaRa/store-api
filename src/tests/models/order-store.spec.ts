@@ -1,8 +1,9 @@
 import OrderStore from "../../models/orderStore";
 import { Order } from "../../interfaces/order";
-import objectContaining = jasmine.objectContaining;
 import UserStore from "../../models/userStore";
 import { User } from "../../interfaces/user";
+import { OrderStatus } from "../../enums/order-status";
+import objectContaining = jasmine.objectContaining;
 
 const store = new OrderStore();
 describe("Order Model", () => {
@@ -41,13 +42,13 @@ describe("Order Model", () => {
     const order: Partial<Order> = {
       id: 1,
       user_id: user.id,
-      status: false,
+      status: OrderStatus.ACTIVE,
     };
     const result = await store.create(order);
     expect(result).toEqual({
       id: 1,
       user_id: user.id,
-      status: false,
+      status: OrderStatus.ACTIVE,
     });
   });
 
@@ -57,7 +58,7 @@ describe("Order Model", () => {
       {
         id: 1,
         user_id: user.id,
-        status: false,
+        status: OrderStatus.ACTIVE,
       },
     ]);
   });
@@ -67,7 +68,7 @@ describe("Order Model", () => {
     expect(result).toEqual({
       id: 1,
       user_id: user.id,
-      status: false,
+      status: OrderStatus.ACTIVE,
     });
   });
 
@@ -75,14 +76,14 @@ describe("Order Model", () => {
     const result = await store.update({
       id: 1,
       user_id: user.id,
-      status: true,
+      status: OrderStatus.COMPLETE,
     });
 
     expect(result).toEqual(
       objectContaining({
         id: 1,
         user_id: user.id,
-        status: true,
+        status: OrderStatus.COMPLETE,
       })
     );
   });
