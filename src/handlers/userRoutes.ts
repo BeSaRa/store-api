@@ -1,6 +1,6 @@
 import { Application, Request, Response } from "express";
 import UserStore from "../models/userStore";
-import { User } from "../models/user";
+import { User } from "../interfaces/user";
 
 const userStore = new UserStore();
 

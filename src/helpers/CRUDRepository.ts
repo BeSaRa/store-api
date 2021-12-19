@@ -2,7 +2,9 @@ import { ICRUDRepository } from "../interfaces/ICRUDRepository";
 import { PoolClient } from "pg";
 import db from "../database";
 
-export default abstract class CRUDRepository<T> implements ICRUDRepository<T> {
+export default abstract class CRUDRepository<T, PrimaryKeyType>
+  implements ICRUDRepository<T, PrimaryKeyType>
+{
   protected conn!: PoolClient;
   abstract table: string;
   abstract insertable_fields: string[];
@@ -61,7 +63,7 @@ export default abstract class CRUDRepository<T> implements ICRUDRepository<T> {
    * @description delete record by it primary key
    * @param id
    */
-  async delete(id: number): Promise<T> {
+  async delete(id: PrimaryKeyType): Promise<T> {
     try {
       await this.open();
       const result = await this.conn.query<T>(
@@ -75,7 +77,7 @@ export default abstract class CRUDRepository<T> implements ICRUDRepository<T> {
     }
   }
 
-  async show(id: number): Promise<T> {
+  async show(id: PrimaryKeyType): Promise<T> {
     try {
       await this.open();
       const result = await this.conn.query(
@@ -106,7 +108,7 @@ export default abstract class CRUDRepository<T> implements ICRUDRepository<T> {
     }
   }
 
-  async exists(id: number): Promise<boolean> {
+  async exists(id: PrimaryKeyType): Promise<boolean> {
     try {
       await this.open();
       const result = await this.conn.query(
