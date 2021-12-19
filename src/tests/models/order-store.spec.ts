@@ -4,10 +4,14 @@ import UserStore from "../../models/userStore";
 import { User } from "../../interfaces/user";
 import { OrderStatus } from "../../enums/order-status";
 import objectContaining = jasmine.objectContaining;
+import { Product } from "../../interfaces/product";
+import ProductStore from "../../models/productStore";
 
 const store = new OrderStore();
 describe("Order Model", () => {
   const userStore = new UserStore();
+  const productStore = new ProductStore();
+  let addedOrder: Order;
   let user: User;
   beforeAll(async () => {
     user = await userStore.create({
@@ -40,13 +44,12 @@ describe("Order Model", () => {
 
   it("should add Order", async () => {
     const order: Partial<Order> = {
-      id: 1,
       user_id: user.id,
       status: OrderStatus.ACTIVE,
     };
-    const result = await store.create(order);
-    expect(result).toEqual({
-      id: 1,
+    addedOrder = await store.create(order);
+    expect(addedOrder).toEqual({
+      id: addedOrder.id,
       user_id: user.id,
       status: OrderStatus.ACTIVE,
     });
@@ -56,17 +59,17 @@ describe("Order Model", () => {
     const result = await store.index();
     expect(result).toEqual([
       {
-        id: 1,
+        id: addedOrder.id,
         user_id: user.id,
         status: OrderStatus.ACTIVE,
       },
     ]);
   });
 
-  it("show method should get Order with id 1", async () => {
-    const result = await store.show(1);
+  it("show method should get Order with given id", async () => {
+    const result = await store.show(addedOrder.id);
     expect(result).toEqual({
-      id: 1,
+      id: addedOrder.id,
       user_id: user.id,
       status: OrderStatus.ACTIVE,
     });
@@ -74,18 +77,48 @@ describe("Order Model", () => {
 
   it("update method should update Order", async () => {
     const result = await store.update({
-      id: 1,
+      id: addedOrder.id,
       user_id: user.id,
       status: OrderStatus.COMPLETE,
     });
 
     expect(result).toEqual(
       objectContaining({
-        id: 1,
+        id: addedOrder.id,
         user_id: user.id,
         status: OrderStatus.COMPLETE,
       })
     );
+  });
+
+  describe("Order Products", () => {
+    let product: Product;
+    beforeAll(async () => {
+      product = await productStore.create({
+        name: "Test Product",
+        category: "Cat1",
+        price: 200,
+      });
+    });
+
+    afterAll(async () => {
+      await productStore.delete(product.id);
+    });
+
+    it("add product to order", async () => {
+      const result = await store.addProductToOrder({
+        product_id: 1,
+        order_id: addedOrder.id,
+        quantity: 10,
+      });
+      expect(result).toEqual(
+        objectContaining({
+          id: result.id,
+          order_id: addedOrder.id,
+          quantity: result.quantity,
+        })
+      );
+    });
   });
 
   it("Order 1 should be exists", async () => {

@@ -5,6 +5,7 @@ import objectContaining = jasmine.objectContaining;
 const store = new ProductStore();
 
 describe("Product Model", () => {
+  let product: Product;
   it("should have an index method", () => {
     expect(store.index).toBeDefined();
   });
@@ -21,15 +22,13 @@ describe("Product Model", () => {
     expect(store.update).toBeDefined();
   });
   it("should add Product", async () => {
-    const user: Partial<Product> = {
-      id: 1,
+    product = await store.create({
       name: "Product 1",
       price: 200,
       category: "men",
-    };
-    const result = await store.create(user);
-    expect(result).toEqual({
-      id: 1,
+    });
+    expect(product).toEqual({
+      id: product.id,
       name: "Product 1",
       price: 200,
       category: "men",
@@ -40,7 +39,7 @@ describe("Product Model", () => {
     const result = await store.index();
     expect(result).toEqual([
       {
-        id: 1,
+        id: product.id,
         name: "Product 1",
         price: 200,
         category: "men",
@@ -49,9 +48,9 @@ describe("Product Model", () => {
   });
 
   it("show method should get Product with id 1", async () => {
-    const result = await store.show(1);
+    const result = await store.show(product.id);
     expect(result).toEqual({
-      id: 1,
+      id: product.id,
       name: "Product 1",
       price: 200,
       category: "men",
@@ -60,20 +59,20 @@ describe("Product Model", () => {
 
   it("update method should update Product", async () => {
     const result = await store.update({
-      id: 1,
+      id: product.id,
       name: "Product after update",
     });
 
     expect(result).toEqual(
       objectContaining({
-        id: 1,
+        id: product.id,
         name: "Product after update",
       })
     );
   });
 
   it("Product 1 should be exists", async () => {
-    const result = await store.exists(1);
+    const result = await store.exists(product.id);
     expect(result).toBeTrue();
   });
 });
