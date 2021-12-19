@@ -1,5 +1,6 @@
 import CRUDRepository from "../helpers/CRUDRepository";
 import { Product } from "../interfaces/product";
+import { TopProduct } from "../interfaces/top-product";
 
 export default class ProductStore extends CRUDRepository<Product, number> {
   protected table: string = "products";
@@ -17,6 +18,26 @@ export default class ProductStore extends CRUDRepository<Product, number> {
       return result.rows;
     } catch (e) {
       throw Error(`unable to get products for category ${category} ${e}`);
+    }
+  }
+
+  async getTop5Products(): Promise<TopProduct[]> {
+    try {
+      await this.open();
+      // get top 5 products based on product quantity on DESC
+      const sql = ` 
+          SELECT SUM(quantity)::integer as quantity ,o.product_id as id,p.name,p.category,price FROM order_products o
+          INNER JOIN products p 
+          ON o.product_id = p.id
+          GROUP BY o.product_id, name,category,price
+          ORDER BY quantity DESC
+          LIMIT 5
+        `;
+      const result = await this.conn.query<TopProduct>(sql);
+      this.close();
+      return result.rows;
+    } catch (e) {
+      throw Error(`unable to get top most 5 products  ${e}`);
     }
   }
 }

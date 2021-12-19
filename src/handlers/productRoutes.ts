@@ -35,6 +35,10 @@ const productsByCategory = async (req: Request, res: Response) => {
   res.send(await store.getByCategory(req.params.cat));
 };
 
+const getTop5Products = async (_req: Request, res: Response) => {
+  res.send(await store.getTop5Products());
+};
+
 export default function productRoutes(app: Application) {
   app.get("/products", index);
   app.post("/products", create);
@@ -42,4 +46,5 @@ export default function productRoutes(app: Application) {
   app.put("/products/:id", update);
   app.delete("/products/:id", destroy);
   app.delete("/products/category/:cat", productsByCategory);
+  app.get("/top-products", getTop5Products);
 }
