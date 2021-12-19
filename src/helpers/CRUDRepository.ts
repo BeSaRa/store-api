@@ -1,31 +1,13 @@
 import { ICRUDRepository } from "../interfaces/ICRUDRepository";
-import { PoolClient } from "pg";
-import db from "../database";
+import { DbConnection } from "./db-connection";
 
 export default abstract class CRUDRepository<T, PrimaryKeyType>
+  extends DbConnection
   implements ICRUDRepository<T, PrimaryKeyType>
 {
-  protected conn!: PoolClient;
   protected abstract table: string;
   protected abstract insertable_fields: string[];
   protected abstract primaryKey: string;
-
-  /**
-   * @description open connection with database
-   * @protected
-   */
-  protected async open(): Promise<PoolClient> {
-    this.conn = await db.connect();
-    return this.conn;
-  }
-
-  /**
-   * @description close connection with database
-   * @protected
-   */
-  protected close(): void {
-    this.conn.release();
-  }
 
   /**
    * @description get all records
