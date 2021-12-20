@@ -42,13 +42,32 @@ export default class OrderStore extends CRUDRepository<Order, number> {
     try {
       await this.open();
       const result = await this.conn.query<OrderProductView>(
-        "SELECT * FROM order_products o INNER JOIN products p ON p.id = o.product_id WHERE o.order_id=$1",
+        `SELECT 
+        o.id , p.id product_id , name , category , price , quantity ,order_id
+        FROM order_products o INNER JOIN products p ON p.id = o.product_id WHERE o.order_id=$1`,
         [orderId]
       );
       this.close();
       return result.rows;
     } catch (e) {
       throw Error(`cannot fetch order items ${e}`);
+    }
+  }
+
+  async getUserOrders(userId: number, status?: OrderStatus): Promise<Order[]> {
+    try {
+      await this.open();
+      const params = status ? [userId, status] : [userId];
+      const result = await this.conn.query(
+        `SELECT * FROM orders WHERE user_id=$1  ${
+          status ? "AND status=$2" : ""
+        }`,
+        params
+      );
+      this.close();
+      return result.rows;
+    } catch (e) {
+      throw Error(`unable to get orders of user ${userId} - ${e}`);
     }
   }
 }

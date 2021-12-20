@@ -35,16 +35,22 @@ const productsByCategory = async (req: Request, res: Response) => {
   res.send(await store.getByCategory(req.params.cat));
 };
 
-const getTop5Products = async (_req: Request, res: Response) => {
-  res.send(await store.getTop5Products());
+const getTop5Products = async (req: Request, res: Response) => {
+  const number = parseInt(req.params.number);
+
+  res.send(
+    await store.getTop5Products(
+      isNaN(number) ? undefined : parseInt(number.toString())
+    )
+  );
 };
 
 export default function productRoutes(app: Application) {
   app.get("/products", index);
   app.post("/products", create);
+  app.delete("/products/category/:cat", productsByCategory);
+  app.get("/products/top/:number", getTop5Products);
   app.get("/products/:id", show);
   app.put("/products/:id", update);
   app.delete("/products/:id", destroy);
-  app.delete("/products/category/:cat", productsByCategory);
-  app.get("/top-products", getTop5Products);
 }

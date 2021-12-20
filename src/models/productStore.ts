@@ -21,7 +21,7 @@ export default class ProductStore extends CRUDRepository<Product, number> {
     }
   }
 
-  async getTop5Products(): Promise<TopProduct[]> {
+  async getTop5Products(count: number = 5): Promise<TopProduct[]> {
     try {
       await this.open();
       // get top 5 products based on product quantity on DESC
@@ -31,9 +31,9 @@ export default class ProductStore extends CRUDRepository<Product, number> {
           ON o.product_id = p.id
           GROUP BY o.product_id, name,category,price
           ORDER BY quantity DESC
-          LIMIT 5
+          LIMIT $1
         `;
-      const result = await this.conn.query<TopProduct>(sql);
+      const result = await this.conn.query<TopProduct>(sql, [count]);
       this.close();
       return result.rows;
     } catch (e) {
