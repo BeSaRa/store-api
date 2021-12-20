@@ -4,13 +4,14 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "start": "node src/server.ts",
+    "start": "node dist/server.js",
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
     "test": "cross-env ENV=test db-migrate --env test up && cross-env ENV=test jasmine-ts && yarn reset",
     "reset": "cross-env ENV=test db-migrate reset --env test",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "build": "tsc"
   },
-  "author": "Udacity",
+  "author": "Ahmed Mostafa",
   "license": "ISC",
   "dependencies": {
     "@types/express": "^4.17.9",
