@@ -38,14 +38,21 @@ export default class OrderStore extends CRUDRepository<Order, number> {
     }
   }
 
-  async getOrderProducts(orderId: number): Promise<OrderProductView[]> {
+  async getOrderProducts(
+    orderId: number,
+    userId?: number
+  ): Promise<OrderProductView[]> {
     try {
       await this.open();
+      const params = userId ? [orderId, userId] : [orderId];
       const result = await this.conn.query<OrderProductView>(
         `SELECT 
-        o.id , p.id product_id , name , category , price , quantity ,order_id
-        FROM order_products o INNER JOIN products p ON p.id = o.product_id WHERE o.order_id=$1`,
-        [orderId]
+        o.id , p.id product_id , name , category , price , quantity , order_id
+        FROM order_products o INNER JOIN products p ON p.id = o.product_id
+        INNER JOIN orders ON o.order_id = orders.id WHERE o.order_id=$1 ${
+          userId ? "AND orders.user_id=$2" : ""
+        }`,
+        params
       );
       this.close();
       return result.rows;

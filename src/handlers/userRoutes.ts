@@ -41,7 +41,12 @@ const userOrders = async (req: Request, res: Response) => {
 };
 
 const getOrderProducts = async (req: Request, res: Response) => {
-  res.send(await orderStore.getOrderProducts(parseInt(req.params.orderId)));
+  res.send(
+    await orderStore.getOrderProducts(
+      parseInt(req.params.orderId),
+      parseInt(req.params.id)
+    )
+  );
 };
 
 const activeUserOrders = async (req: Request, res: Response) => {
