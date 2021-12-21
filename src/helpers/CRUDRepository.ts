@@ -94,11 +94,11 @@ export default abstract class CRUDRepository<T, PrimaryKeyType>
     try {
       await this.open();
       const result = await this.conn.query(
-        `SELECT COUNT(*) FROM ${this.table} WHERE ${this.primaryKey}=$1`,
+        `SELECT COUNT(*)::integer FROM ${this.table} WHERE ${this.primaryKey}=$1`,
         [id]
       );
       this.close();
-      return !!result.rowCount;
+      return !!result.rows[0].count;
     } catch (e) {
       throw new Error(`unable to find record in ${this.table} - ${e}`);
     }
