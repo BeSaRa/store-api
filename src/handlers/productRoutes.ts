@@ -1,6 +1,7 @@
 import { Application, Request, Response } from "express";
 import ProductStore from "../models/productStore";
 import { Product } from "../interfaces/product";
+import { authToken } from "../middleware/auth-token";
 
 const store = new ProductStore();
 const index = async (_req: Request, res: Response) => {
@@ -47,10 +48,10 @@ const getTop5Products = async (req: Request, res: Response) => {
 
 export default function productRoutes(app: Application) {
   app.get("/products", index);
-  app.post("/products", create);
-  app.delete("/products/category/:cat", productsByCategory);
+  app.post("/products", authToken, create);
+  app.get("/products/category/:cat", productsByCategory);
   app.get("/products/top/:number", getTop5Products);
   app.get("/products/:id", show);
-  app.put("/products/:id", update);
-  app.delete("/products/:id", destroy);
+  app.put("/products/:id", authToken, update);
+  app.delete("/products/:id", authToken, destroy);
 }

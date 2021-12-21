@@ -1,6 +1,7 @@
 import { Application, Request, Response } from "express";
 import OrderStore from "../models/orderStore";
 import { Order } from "../interfaces/order";
+import { authToken } from "../middleware/auth-token";
 
 const store = new OrderStore();
 const index = async (req: Request, res: Response) => {
@@ -51,10 +52,10 @@ const orderProducts = async (req: Request, res: Response) => {
 
 export default function orderRoutes(app: Application) {
   app.get("/orders", index);
-  app.post("/orders", create);
+  app.post("/orders", authToken, create);
   app.get("/orders/:id", show);
-  app.put("/orders/:id", update);
-  app.delete("/orders/:id", destroy);
-  app.post("/orders/:id/products", addProduct);
+  app.put("/orders/:id", authToken, update);
+  app.delete("/orders/:id", authToken, destroy);
+  app.post("/orders/:id/products", authToken, addProduct);
   app.get("/orders/:id/products", orderProducts);
 }

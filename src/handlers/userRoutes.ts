@@ -3,6 +3,7 @@ import UserStore from "../models/userStore";
 import { User } from "../interfaces/user";
 import OrderStore from "../models/orderStore";
 import { OrderStatus } from "../enums/order-status";
+import { authToken } from "../middleware/auth-token";
 
 const userStore = new UserStore();
 const orderStore = new OrderStore();
@@ -77,14 +78,14 @@ const authenticate = async (req: Request, res: Response) => {
 };
 
 export default function userRoutes(app: Application): void {
-  app.get("/users", index);
-  app.post("/users", create);
   app.post("/users/authenticate", authenticate);
-  app.get("/users/:id", show);
-  app.put("/users/:id", update);
-  app.delete("/users/:id", destroy);
-  app.get("/users/:id/orders/active", activeUserOrders);
-  app.get("/users/:id/orders/complete", completeUserOrders);
-  app.get("/users/:id/orders", userOrders);
-  app.get("/users/:id/orders/:orderId/products", getOrderProducts);
+  app.get("/users", authToken, index);
+  app.post("/users", authToken, create);
+  app.get("/users/:id", authToken, show);
+  app.put("/users/:id", authToken, update);
+  app.delete("/users/:id", authToken, destroy);
+  app.get("/users/:id/orders/active", authToken, activeUserOrders);
+  app.get("/users/:id/orders/complete", authToken, completeUserOrders);
+  app.get("/users/:id/orders", authToken, userOrders);
+  app.get("/users/:id/orders/:orderId/products", authToken, getOrderProducts);
 }
