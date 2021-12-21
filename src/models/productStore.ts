@@ -26,7 +26,7 @@ export default class ProductStore extends CRUDRepository<Product, number> {
       await this.open();
       // get top 5 products based on product quantity on DESC
       const sql = ` 
-          SELECT SUM(quantity)::integer as quantity ,o.product_id as id,p.name,p.category,price FROM order_products o
+          SELECT o.product_id as id,p.name,p.category,p.price,SUM(quantity)::integer as quantity FROM order_products o
           INNER JOIN products p 
           ON o.product_id = p.id
           GROUP BY o.product_id, name,category,price
