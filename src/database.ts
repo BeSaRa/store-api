@@ -4,20 +4,23 @@ import { Pool } from "pg";
 dotenv.config();
 
 const {
-  POSTGRES_DB,
-  POSTGRES_HOST,
-  POSTGRES_USER,
-  POSTGRES_USER_TEST,
-  POSTGRES_DB_TEST,
   ENV,
-  POSTGRES_PASSWORD,
+  DB_HOST,
+  DB_PORT,
+  TEST_DB,
+  TEST_USER,
+  TEST_PASSWORD,
+  DEV_DB,
+  DEV_USER,
+  DEV_PASSWORD,
 } = process.env;
 
 const db = new Pool({
-  user: ENV === "test" ? POSTGRES_USER_TEST : POSTGRES_USER,
-  password: POSTGRES_PASSWORD,
-  database: ENV === "test" ? POSTGRES_DB_TEST : POSTGRES_DB,
-  host: POSTGRES_HOST,
+  host: DB_HOST,
+  port: parseInt(DB_PORT!),
+  database: ENV === "test" ? TEST_DB : DEV_DB,
+  user: ENV === "test" ? TEST_USER : DEV_USER,
+  password: ENV === "test" ? TEST_PASSWORD : DEV_PASSWORD,
 });
 
 export default db;
