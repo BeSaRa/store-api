@@ -1,54 +1,106 @@
-# Storefront Backend Project
+# Udacity Store API
 
-## Getting Started
+A node express server application providing restful api endpoints to manage products and user orders for an online
+store.
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+### 1 - environment variables ```.env``` file
 
-## Required Technologies
-Your application must make use of the following libraries:
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+below is the environment variable required to make application work properly
 
-## Steps to Completion
+| variable           | description                                                                                           |
+|--------------------|-------------------------------------------------------------------------------------------------------|
+| ENV                | to specify which environment to work you can choose only one of those values (```test``` , ```dev```) |
+| POSTGRES_PASSWORD  | password of default postgres user to connect to database                                              |
+| POSTGRES_HOST      | postgres db server host                                                                               |
+| POSTGRES_DB        | db dev name which will connected to it while run watch                                                |
+| POSTGRES_USER      | db dev username                                                                                       |
+| POSTGRES_DB_TEST   | db dev name which will connected to it while run test                                                 |
+| POSTGRES_USER_TEST | db test username                                                                                      |
+| SALT_ROUNDS        | to be used to generate password hash based on the specified number                                    |
+| PASSWORD_PEPPER    | random string used to append to the plain password to make it harder to crack                         |
+| SECRET_TOKEN_KEY   | secret string used as JWT signature                                                                   |
 
-### 1. Plan to Meet Requirements
+### 2 - docker-compose
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API. 
+go to app root folder and open your `terminal` then run the below command to start postgres database container in detach
+mode, which will make you can use the same `terminal` to exec more commands
 
-Your first task is to read the requirements and update the document with the following:
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.    
-**Example**: A SHOW route: 'blogs/:id' [GET] 
+```shell
+docker-compose up -d  
+```
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.   
-**Example**: You can format this however you like but these types of information should be provided
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+### 3 - connect to psql database container
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape. 
+- to access container bash type the below command and hit `enter`
+- ```shell
+    docker exec -it db bash
+    ```
 
-### 2.  DB Creation and Migrations
+- then login to psql with user postgres by typing the below command
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder. 
+-   ```shell
+    psql -U postgres
+    ```
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+### 4 - create our databases
 
-### 3. Models
+- then create our databases, yes we need 2 database one for `dev` and other for `test` environments
+- `dev` **environment database** : *note remember the database name and user because we need it later to update
+  our `.env` file*
+    ```shell
+    CREATE USER dev_user WITH PASSWORD 'type_your_password_here';
+    CREATE DATABASE dev_db;
+    GRANT ALL PRIVILEGES ON DATABASE dev_db TO dev_user;
+    ```
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+- `test` **environment database**: *note remember the database name and user because we need it later to update
+  our `.env` file*
+    ```shell
+    CREATE USER test_user WITH PASSWORD 'type_your_password_here';
+    CREATE DATABASE test_db;
+    GRANT ALL PRIVILEGES ON DATABASE test_db TO test_user;
+    ```
 
-### 4. Express Handlers
+### 5 - create `.env` file in project root folder and fill the variables
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled. 
+- example of `.env` file, but remember you have to write your owen values like database names and users that you created
+  on step #4
+    ```
+    ENV=dev
+    POSTGRES_PASSWORD=password
+    POSTGRES_HOST=127.0.0.1
+    POSTGRES_DB=store
+    POSTGRES_USER=app
+    POSTGRES_USER_TEST=test
+    POSTGRES_DB_TEST=app_test
+    SALT_ROUNDS=10
+    PASSWORD_PEPPER=secret-hash
+    SECRET_TOKEN_KEY=token-token
+  ```
 
-### 5. JWTs
+### 6 - Install App dependencies
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+- in the project root folder open the `terminal` then run the below command
+  ```shell
+  yarn install 
+  ```
 
-### 6. QA and `README.md`
+### 7 - install `db-migrate` tool as global command
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
+- in the same terminal run the below command, to make `db-migrate` command available global which you can access it from
+  anywhere
+    ```shell
+    yarn global add db-migrate
+    ```
+- then start your migration to build database schema tables
+  ```shell
+  db-migrate up
+  ```
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+### 8 - run the application `dev` mode
+
+- You are one step away from running the Application, just type the below command and hit `enter`
+  ```shell
+  yarn start
+  ```
+- congratulations, now you can access the application on this url: `http://localhost:3000`
