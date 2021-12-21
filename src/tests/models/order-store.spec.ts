@@ -15,7 +15,7 @@ describe("Order Model", () => {
   let user: User;
   beforeAll(async () => {
     user = await userStore.create({
-      id: 1,
+      username: "user1",
       first_name: "ahmed",
       last_name: "mostafa",
       password: "password",

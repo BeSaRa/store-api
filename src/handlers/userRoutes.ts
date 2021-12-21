@@ -10,8 +10,10 @@ const index = async (_req: Request, res: Response) => {
   res.send(await userStore.index());
 };
 const create = async (req: Request, res: Response) => {
-  const { first_name, last_name, password } = req.body;
-  res.send(await userStore.create({ first_name, last_name, password }));
+  const { first_name, last_name, password, username } = req.body;
+  res.send(
+    await userStore.create({ first_name, last_name, password, username })
+  );
 };
 
 const destroy = async (req: Request, res: Response) => {
@@ -63,9 +65,21 @@ const completeUserOrders = async (req: Request, res: Response) => {
   );
 };
 
+const authenticate = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    res
+      .status(401)
+      .send("Please provide username and password to authenticate");
+    return;
+  }
+  res.send(await userStore.authenticate(username, password));
+};
+
 export default function userRoutes(app: Application): void {
   app.get("/users", index);
   app.post("/users", create);
+  app.post("/users/authenticate", authenticate);
   app.get("/users/:id", show);
   app.put("/users/:id", update);
   app.delete("/users/:id", destroy);

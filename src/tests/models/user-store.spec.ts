@@ -4,7 +4,7 @@ import objectContaining = jasmine.objectContaining;
 
 const store = new UserStore();
 describe("User Model", () => {
-  let createdId: number;
+  let createdUser: User;
   it("should have an index method", () => {
     expect(store.index).toBeDefined();
   });
@@ -22,58 +22,70 @@ describe("User Model", () => {
   });
   it("should create user", async () => {
     const user: Partial<User> = {
+      username: "user1",
       first_name: "ahmed",
       last_name: "mostafa",
       password: "password",
     };
-    const result = await store.create(user);
-    createdId = result.id;
-    expect(result).toEqual({
-      id: createdId,
+    createdUser = await store.create(user);
+    expect(createdUser).toEqual({
+      id: createdUser.id,
+      username: "user1",
       first_name: "ahmed",
       last_name: "mostafa",
-      password: "password",
+      password: createdUser.password,
     });
+  });
+
+  it("authenticate should return authenticated user with token if provided credentials right", async () => {
+    const authenticated = await store.authenticate("user1", "password");
+    expect(authenticated?.token).toBeDefined();
+  });
+  it("authenticate should return null if provided credentials is wrong", async () => {
+    const authenticated = await store.authenticate("xyz", "blah-blah");
+    expect(authenticated).toBeNull();
   });
 
   it("index method should get list of users ", async () => {
     const result = await store.index();
     expect(result).toEqual([
       {
-        id: createdId,
+        id: createdUser.id,
+        username: "user1",
         first_name: "ahmed",
         last_name: "mostafa",
-        password: "password",
+        password: result[0].password,
       },
     ]);
   });
 
   it("show method should get user with created id", async () => {
-    const result = await store.show(createdId);
+    const result = await store.show(createdUser.id);
     expect(result).toEqual({
-      id: createdId,
+      id: createdUser.id,
+      username: "user1",
       first_name: "ahmed",
       last_name: "mostafa",
-      password: "password",
+      password: result.password,
     });
   });
 
   it("update method should update user", async () => {
     const result = await store.update({
-      id: createdId,
+      id: createdUser.id,
       first_name: "John Doe",
     });
 
     expect(result).toEqual(
       objectContaining({
         first_name: "John Doe",
-        id: createdId,
+        id: createdUser.id,
       })
     );
   });
 
   it("user 1 should be exists", async () => {
-    const result = await store.exists(createdId);
+    const result = await store.exists(createdUser.id);
     expect(result).toBeTrue();
   });
 });
