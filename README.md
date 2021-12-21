@@ -101,6 +101,6 @@ docker-compose up -d
 
 - You are one step away from running the Application, just type the below command and hit `enter`
   ```shell
-  yarn start
+  yarn watch
   ```
 - congratulations, now you can access the application on this url: `http://localhost:3000`
