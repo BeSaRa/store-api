@@ -77,7 +77,35 @@ const authenticate = async (req: Request, res: Response) => {
   res.send(await userStore.authenticate(username, password));
 };
 
+const createDefaultApplicationUser = async (req: Request, res: Response) => {
+  // we will create user in case if there is no user with id =1
+  // case we know if there is user with id 1 means this route already consumed before
+  const defaultUser: Partial<User> = {
+    username: "username",
+    password: "password",
+    first_name: "admin",
+    last_name: "user",
+  };
+  let user: User;
+  // to check the user with id 1 exists
+  if (await userStore.exists(1)) {
+    // return it
+    user = await userStore.show(1);
+  } else {
+    // create one
+    user = await userStore.create(defaultUser);
+  }
+
+  res.send({
+    ...user,
+    // always show the plain password for this user to make the reviewer be able to consume the APIs
+    password: defaultUser.password,
+  });
+};
+
 export default function userRoutes(app: Application): void {
+  // this route will be available only for development, and we should remove it before build the project
+  app.get("/users/create-default-user", createDefaultApplicationUser);
   app.post("/users/authenticate", authenticate);
   app.get("/users", authToken, index);
   app.post("/users", authToken, create);
