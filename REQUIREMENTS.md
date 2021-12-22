@@ -5,38 +5,49 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 #### Products
-- Index 
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+- Index `GET` `http://localhost:3000/products`
+- Show `GET` `http://localhost:3000/products/{product_id}`
+- Create [token required] `POST` `http://localhost:3000/products` [request body](#Product)
+- [OPTIONAL] Top 5 most popular products `GET` `http://localhost:3000/products/top/{number}`
+- [OPTIONAL] Products by category (args: product category) `GET` `http://localhost:3000/products/category/{category}`
 
 #### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- Index [token required] `GET` `http://localhost:3000/users`
+- Show [token required]  `GET` `http://localhost:3000/users/{user_id}` 
+- Create [token required] `POST` `http://localhost:3000/users` [request body](#User)
 
 #### Orders
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Current Order by user (args: user id)[token required] `GET` `http://localhost:3000/users/{user_id}/orders`
+- [OPTIONAL] Completed Orders by user (args: user id)[token required] `GET` `http://localhost:3000/users/{user_id}/orders/complete`
 
-## Data Shapes
+## Data Shapes and Schema
 #### Product
--  id
-- name
-- price
-- [OPTIONAL] category
+- id `number`
+- name `string`
+- price `number`
+- [OPTIONAL] category `string`
+
+#### Products Table Schema
+<img alt="products table image" src="./images/products-table.png" title="product table"/>
 
 #### User
-- id
-- firstName
-- lastName
-- password
+- id `number`
+- firstName `string`
+- lastName `string`
+- password `string`
+#### Users Table Schema
+<img alt="users table schema" src="./images/users-table.png">
 
 #### Orders
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+- id `number`
+- user_id `number`
+- status of order (active or complete) `string`
+#### Orders Table Schema
+<img alt="orders table schema" src="./images/users-table.png">
 
+### OrderProduct
+- id `number`
+- product_id of each product in the order `number`
+- quantity of each product in the order `number`
+#### Order Products Table Schema
+<img alt="orders table schema" src="./images/users-table.png">
