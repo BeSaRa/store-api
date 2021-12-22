@@ -8,7 +8,7 @@ const index = async (_req: Request, res: Response) => {
   res.send(await store.index());
 };
 const create = async (req: Request, res: Response) => {
-  const { name, price, category } = req.body;
+  const { name, price, category } = req.body as Product;
   res.send(await store.create({ name, price, category }));
 };
 const show = async (req: Request, res: Response) => {
@@ -19,11 +19,12 @@ const update = async (req: Request, res: Response) => {
     res.status(400);
     res.send("cannot update none exists Product");
   } else {
+    const { price, category, name } = req.body as Product;
     const product: Partial<Product> = {
       id: parseInt(req.params.id),
-      price: parseInt(req.body.price),
-      category: req.body.category,
-      name: req.body.name,
+      price,
+      category,
+      name,
     };
     res.send(await store.update(product));
   }
@@ -38,7 +39,6 @@ const productsByCategory = async (req: Request, res: Response) => {
 
 const getTop5Products = async (req: Request, res: Response) => {
   const number = parseInt(req.params.number);
-
   res.send(
     await store.getTop5Products(
       isNaN(number) ? undefined : parseInt(number.toString())

@@ -11,7 +11,7 @@ const index = async (_req: Request, res: Response) => {
   res.send(await userStore.index());
 };
 const create = async (req: Request, res: Response) => {
-  const { first_name, last_name, password, username } = req.body;
+  const { first_name, last_name, password, username } = req.body as User;
   res.send(
     await userStore.create({ first_name, last_name, password, username })
   );
@@ -30,10 +30,11 @@ const update = async (req: Request, res: Response) => {
     res.status(400);
     res.send("cannot update none exists user");
   } else {
+    const { first_name, last_name } = req.body as User;
     const user: Partial<User> = {
       id: parseInt(req.params.id),
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
+      first_name,
+      last_name,
     };
     res.send(await userStore.update(user));
   }
@@ -67,7 +68,10 @@ const completeUserOrders = async (req: Request, res: Response) => {
 };
 
 const authenticate = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body as {
+    username: string;
+    password: string;
+  };
   if (!username || !password) {
     res
       .status(401)
