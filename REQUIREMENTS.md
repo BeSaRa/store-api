@@ -17,8 +17,11 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Create [token required] `POST` `http://localhost:3000/users` [request body](#User)
 
 #### Orders
-- Current Order by user (args: user id)[token required] `GET` `http://localhost:3000/users/{user_id}/orders`
+- All Order by user (args: user id)[token required] `GET` `http://localhost:3000/users/{user_id}/orders`
 - [OPTIONAL] Completed Orders by user (args: user id)[token required] `GET` `http://localhost:3000/users/{user_id}/orders/complete`
+- [OPTIONAL] Active Orders by user (args: user id)[token required] `GET` `http://localhost:3000/users/{user_id}/orders/active`
+
+More About APIs Endpoints here in [README.md](README.md)
 
 ## Data Shapes and Schema
 #### Product
