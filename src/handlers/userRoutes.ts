@@ -4,6 +4,7 @@ import { User } from "../interfaces/user";
 import OrderStore from "../models/orderStore";
 import { OrderStatus } from "../enums/order-status";
 import { authToken } from "../middleware/auth-token";
+import { AsyncErrorWrapper } from "../helpers/async-error-wrapper";
 
 const userStore = new UserStore();
 const orderStore = new OrderStore();
@@ -109,15 +110,30 @@ const createDefaultApplicationUser = async (req: Request, res: Response) => {
 
 export default function userRoutes(app: Application): void {
   // this route will be available only for development, and we should remove it before build the project
-  app.get("/users/create-default-user", createDefaultApplicationUser);
-  app.post("/users/authenticate", authenticate);
-  app.get("/users", authToken, index);
-  app.post("/users", authToken, create);
-  app.get("/users/:id", authToken, show);
-  app.put("/users/:id", authToken, update);
-  app.delete("/users/:id", authToken, destroy);
-  app.get("/users/:id/orders/active", authToken, activeUserOrders);
-  app.get("/users/:id/orders/complete", authToken, completeUserOrders);
-  app.get("/users/:id/orders", authToken, userOrders);
-  app.get("/users/:id/orders/:orderId/products", authToken, getOrderProducts);
+  app.get(
+    "/users/create-default-user",
+    AsyncErrorWrapper.catch(createDefaultApplicationUser)
+  );
+  app.post("/users/authenticate", AsyncErrorWrapper.catch(authenticate));
+  app.get("/users", authToken, AsyncErrorWrapper.catch(index));
+  app.post("/users", authToken, AsyncErrorWrapper.catch(create));
+  app.get("/users/:id", authToken, AsyncErrorWrapper.catch(show));
+  app.put("/users/:id", authToken, AsyncErrorWrapper.catch(update));
+  app.delete("/users/:id", authToken, AsyncErrorWrapper.catch(destroy));
+  app.get(
+    "/users/:id/orders/active",
+    authToken,
+    AsyncErrorWrapper.catch(activeUserOrders)
+  );
+  app.get(
+    "/users/:id/orders/complete",
+    authToken,
+    AsyncErrorWrapper.catch(completeUserOrders)
+  );
+  app.get("/users/:id/orders", authToken, AsyncErrorWrapper.catch(userOrders));
+  app.get(
+    "/users/:id/orders/:orderId/products",
+    authToken,
+    AsyncErrorWrapper.catch(getOrderProducts)
+  );
 }

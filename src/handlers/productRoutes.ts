@@ -2,6 +2,7 @@ import { Application, Request, Response } from "express";
 import ProductStore from "../models/productStore";
 import { Product } from "../interfaces/product";
 import { authToken } from "../middleware/auth-token";
+import { AsyncErrorWrapper } from "../helpers/async-error-wrapper";
 
 const store = new ProductStore();
 const index = async (_req: Request, res: Response) => {
@@ -47,11 +48,14 @@ const getTop5Products = async (req: Request, res: Response) => {
 };
 
 export default function productRoutes(app: Application) {
-  app.get("/products", index);
-  app.post("/products", authToken, create);
-  app.get("/products/category/:cat", productsByCategory);
-  app.get("/products/top/:number", getTop5Products);
-  app.get("/products/:id", show);
-  app.put("/products/:id", authToken, update);
-  app.delete("/products/:id", authToken, destroy);
+  app.get("/products", AsyncErrorWrapper.catch(index));
+  app.post("/products", authToken, AsyncErrorWrapper.catch(create));
+  app.get(
+    "/products/category/:cat",
+    AsyncErrorWrapper.catch(productsByCategory)
+  );
+  app.get("/products/top/:number", AsyncErrorWrapper.catch(getTop5Products));
+  app.get("/products/:id", AsyncErrorWrapper.catch(show));
+  app.put("/products/:id", authToken, AsyncErrorWrapper.catch(update));
+  app.delete("/products/:id", authToken, AsyncErrorWrapper.catch(destroy));
 }

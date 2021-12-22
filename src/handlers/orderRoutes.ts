@@ -3,6 +3,7 @@ import OrderStore from "../models/orderStore";
 import { Order } from "../interfaces/order";
 import { authToken } from "../middleware/auth-token";
 import { OrderStatus } from "../enums/order-status";
+import { AsyncErrorWrapper } from "../helpers/async-error-wrapper";
 
 const store = new OrderStore();
 const index = async (req: Request, res: Response) => {
@@ -38,7 +39,6 @@ const update = async (req: Request, res: Response) => {
 const destroy = async (req: Request, res: Response) => {
   res.send(await store.delete(parseInt(req.params.id)));
 };
-
 const addProduct = async (req: Request, res: Response) => {
   if (await store.isComplete(parseInt(req.params.id))) {
     res.status(400).send("Cannot add product to completed order");
@@ -56,17 +56,20 @@ const addProduct = async (req: Request, res: Response) => {
     })
   );
 };
-
 const orderProducts = async (req: Request, res: Response) => {
   res.send(await store.getOrderProducts(parseInt(req.params.id)));
 };
 
 export default function orderRoutes(app: Application) {
-  app.get("/orders", index);
-  app.post("/orders", authToken, create);
-  app.get("/orders/:id", show);
-  app.put("/orders/:id", authToken, update);
-  app.delete("/orders/:id", authToken, destroy);
-  app.post("/orders/:id/products", authToken, addProduct);
-  app.get("/orders/:id/products", orderProducts);
+  app.get("/orders", AsyncErrorWrapper.catch(index));
+  app.post("/orders", authToken, AsyncErrorWrapper.catch(create));
+  app.get("/orders/:id", AsyncErrorWrapper.catch(show));
+  app.put("/orders/:id", authToken, AsyncErrorWrapper.catch(update));
+  app.delete("/orders/:id", authToken, AsyncErrorWrapper.catch(destroy));
+  app.post(
+    "/orders/:id/products",
+    authToken,
+    AsyncErrorWrapper.catch(addProduct)
+  );
+  app.get("/orders/:id/products", AsyncErrorWrapper.catch(orderProducts));
 }
