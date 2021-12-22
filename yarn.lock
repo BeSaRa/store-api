@@ -423,7 +423,7 @@ db-migrate-shared@^1.2.0:
 
 db-migrate@^0.11.13:
   version "0.11.13"
-  resolved "https://registry.npmjs.org/db-migrate/-/db-migrate-0.11.13.tgz"
+  resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.11.13.tgz#b9e5b242c62e82ef8ed2b29e118698813e953d67"
   integrity sha512-OE/bbDo/mQvLmZrui/2jNAiAECJROSURCOU5xs6qKr3FvtUE2O6b0xBUI6WyAAKdili3LJQHFlpqugiYCGTSBA==
   dependencies:
     balanced-match "^1.0.0"
