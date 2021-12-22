@@ -167,3 +167,5 @@ to run the unit test for the app, open your terminal on the root folder then run
 ```shell
 yarn test
 ```
+
+More About database schema here in [REQUIRMENTS.md](REQUIREMENTS.md)
