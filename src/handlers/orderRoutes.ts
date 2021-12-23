@@ -61,9 +61,9 @@ const orderProducts = async (req: Request, res: Response) => {
 };
 
 export default function orderRoutes(app: Application) {
-  app.get("/orders", AsyncErrorWrapper.catch(index));
+  app.get("/orders", authToken, AsyncErrorWrapper.catch(index));
   app.post("/orders", authToken, AsyncErrorWrapper.catch(create));
-  app.get("/orders/:id", AsyncErrorWrapper.catch(show));
+  app.get("/orders/:id", authToken, AsyncErrorWrapper.catch(show));
   app.put("/orders/:id", authToken, AsyncErrorWrapper.catch(update));
   app.delete("/orders/:id", authToken, AsyncErrorWrapper.catch(destroy));
   app.post(
@@ -71,5 +71,9 @@ export default function orderRoutes(app: Application) {
     authToken,
     AsyncErrorWrapper.catch(addProduct)
   );
-  app.get("/orders/:id/products", AsyncErrorWrapper.catch(orderProducts));
+  app.get(
+    "/orders/:id/products",
+    authToken,
+    AsyncErrorWrapper.catch(orderProducts)
+  );
 }
