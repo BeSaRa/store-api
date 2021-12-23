@@ -1,6 +1,8 @@
 import { PoolClient } from "pg";
 import db from "../database";
 
+let releaseState = false;
+
 export abstract class DbConnection {
   protected conn!: PoolClient;
 
@@ -10,6 +12,7 @@ export abstract class DbConnection {
    */
   protected async open(): Promise<PoolClient> {
     this.conn = await db.connect();
+    releaseState = false;
     return this.conn;
   }
 
@@ -18,6 +21,7 @@ export abstract class DbConnection {
    * @protected
    */
   protected close(): void {
-    this.conn.release();
+    if (!releaseState) this.conn.release();
+    releaseState = true;
   }
 }

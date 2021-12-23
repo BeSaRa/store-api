@@ -34,6 +34,7 @@ export default class OrderStore extends CRUDRepository<Order, number> {
       this.close();
       return result.rows[0];
     } catch (e) {
+      console.log("HERE");
       throw Error(`Cannot add Product to Order ${e}`);
     }
   }

@@ -79,7 +79,8 @@ const authenticate = async (req: Request, res: Response) => {
       .send("Please provide username and password to authenticate");
     return;
   }
-  res.send(await userStore.authenticate(username, password));
+  const result = await userStore.authenticate(username, password);
+  res.status(result ? 200 : 401).send(result ? result : "fail to authenticate");
 };
 
 const createDefaultApplicationUser = async (req: Request, res: Response) => {

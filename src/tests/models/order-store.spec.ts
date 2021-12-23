@@ -107,7 +107,7 @@ describe("Order Model", () => {
 
     it("add product to order", async () => {
       const result = await store.addProductToOrder({
-        product_id: 1,
+        product_id: product.id,
         order_id: addedOrder.id,
         quantity: 10,
       });
@@ -116,13 +116,14 @@ describe("Order Model", () => {
           id: result.id,
           order_id: addedOrder.id,
           quantity: result.quantity,
+          product_id: product.id,
         })
       );
     });
   });
 
   it("Order 1 should be exists", async () => {
-    const result = await store.exists(1);
+    const result = await store.exists(addedOrder.id);
     expect(result).toBeTrue();
   });
 });

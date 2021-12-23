@@ -37,7 +37,7 @@ describe("User Model", () => {
     });
   });
 
-  it("authenticate should return authenticated user with token if provided credentials right", async () => {
+  it("authenticate should return authenticated user with token if provided right credentials", async () => {
     const authenticated = await store.authenticate("user1", "password");
     expect(authenticated?.token).toBeDefined();
   });
