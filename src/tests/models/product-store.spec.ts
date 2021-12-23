@@ -38,7 +38,6 @@ describe("Product Model", () => {
 
   it("index method should get list of Products", async () => {
     const result = await store.index();
-    console.log(result);
     expect(result).toEqual([
       {
         id: product.id,
