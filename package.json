@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "watch": "tsc-watch --esModuleInterop --noImplicitAny src/server.ts --outDir ./dist --onSuccess \"node ./dist/server.js\"",
-    "test": "cross-env ENV=test db-migrate --env test up && cross-env ENV=test jasmine-ts && yarn reset",
+    "test": "cross-env ENV=test yarn migrate:reset --env test && cross-env ENV=test yarn migrate:up --env test && cross-env ENV=test jasmine-ts",
     "reset": "cross-env ENV=test db-migrate reset --env test",
     "tsc": "tsc",
     "build": "tsc",
