@@ -127,8 +127,6 @@ Note for any request need JWT we have to provide it in request header called `Au
 | `GET`    | /products/{product_id}          | get product by id                                                                                                                          | `No`  | Param: `product_id` to retrieve                                                         |
 | `PUT`    | /products/{product_id}          | edit product                                                                                                                               | `yes` | Param: `product_id` body : `{name:string,price:number,category:string}`                 |
 | `DELETE` | /products/{product_id}          | delete product by given id                                                                                                                 | `yes` | Param: `product_id` to delete                                                           |
-| `GET`    | /products/{product_id}/products | display product products                                                                                                                   | `No`  | Param: `product_id` to display it's products                                            |
-| `POST`   | /products/{product_id}/products | add product to specific product                                                                                                            | `yes` | Param: `product_id` body:`{product_id:number,quantity: number}`                         |
 | `GET`    | products/category/{category}    | list of products by category                                                                                                               | `No`  | Param: `category`string category name to display all product of this category if exists |
 | `GET`    | products/top/{top_number}       | list of top products by given number it is dynamic provide any number you want or ignore it by default will return most popular 5 products | `No`  | Param: `top_number` number to limit the return products list                            |
 
@@ -152,12 +150,12 @@ Note for any request need JWT we have to provide it in request header called `Au
 
 | Method   | Route                       | Description                   | Auth  | Params/Body                                                            |
 |----------|-----------------------------|-------------------------------|-------|------------------------------------------------------------------------|
-| `GET`    | /orders                     | get all orders                | `No`  | ------                                                                 |
+| `GET`    | /orders                     | get all orders                | `yes` | ------                                                                 |
 | `POST`   | /orders                     | create a new order            | `yes` | body `{status: active or complete, user_id: number}`                   |
-| `GET`    | /orders/{order_id}          | get order by id               | `No`  | Param: `order_id` to retrieve                                          |
+| `GET`    | /orders/{order_id}          | get order by id               | `yes` | Param: `order_id` to retrieve                                          |
 | `PUT`    | /orders/{order_id}          | edit order                    | `yes` | Param:`order_id` body: `{status: active or complete, user_id: number}` |
 | `DELETE` | /orders/{order_id}          | delete order by given id      | `yes` | Param:`order_id` to delete                                             |
-| `GET`    | /orders/{order_id}/products | display order products        | `No`  | Param:`order_id` to display it's products                              |
+| `GET`    | /orders/{order_id}/products | display order products        | `yes` | Param:`order_id` to display it's products                              |
 | `POST`   | /orders/{order_id}/products | add product to specific order | `yes` | Param: `order_id` body:`{product_id:number,quantity: number}`          |
 
 ## Testing
