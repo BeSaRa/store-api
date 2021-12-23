@@ -52,7 +52,7 @@ describe("Products Routes", () => {
     });
   });
 
-  fdescribe("Products API", () => {
+  describe("Products API", () => {
     beforeAll(async () => {
       await userStore
         .authenticate(createdUser.username, "password")
@@ -139,7 +139,7 @@ describe("Products Routes", () => {
 
     it("DELETE /products/:id delete product by given id", (done) => {
       request
-        .get("/products/" + createdProductApi.id)
+        .delete("/products/" + createdProductApi.id)
         .auth(token, { type: "bearer" })
         .expect(200)
         .end((err, res) => {

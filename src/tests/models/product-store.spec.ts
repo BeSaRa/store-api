@@ -6,6 +6,7 @@ const store = new ProductStore();
 
 describe("Product Model", () => {
   let product: Product;
+
   it("should have an index method", () => {
     expect(store.index).toBeDefined();
   });
@@ -37,6 +38,7 @@ describe("Product Model", () => {
 
   it("index method should get list of Products", async () => {
     const result = await store.index();
+    console.log(result);
     expect(result).toEqual([
       {
         id: product.id,
